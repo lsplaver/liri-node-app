@@ -5,6 +5,7 @@ var keys = require("./keys.js");
 var Twitter = require('twitter');
 var Spotify = require('node-spotify-api');
 var request = require('request');
+var fs = require('fs');
 
 var spotify = new Spotify(keys.spotify);
 var client = new Twitter(keys.twitter);
@@ -59,7 +60,11 @@ function moviesAtOMDB(title) {
     });
 };
 
-switch (nodeArgs[2]) {
+var chosenComnd = nodeArgs[2];
+
+function liriCommandSwitch(chosenCommand) {
+
+switch (chosenCommand) {
     case "my-tweets":
         break;
     case "spotify-this-song":
@@ -93,242 +98,31 @@ switch (nodeArgs[2]) {
         }
         break;
     case "do-what-it-says":
+        fs.readFile('random.txt', 'utf8', function(err, data) {
+            if (err) {
+                return console.log("Error occurred: " + err);
+            }
+
+            console.log(data);
+
+            var tempRandom = [];
+            tempRandom = data.split(',');
+            for (var a = 0; a < tempRandom.length; a++) {
+                console.log("The value of tempRandom[" + a + "] is: " + tempRandom[a]);
+            }
+            randomCommand = tempRandom[0];
+            nodeArgs[3] = tempRandom[1];
+            resetSwitch(randomCommand);
+        });
         break;
     default:
         console.log("You didn't enter a valid option, rerun with the following options: \n'my-tweets' \n'spotify-this-song' followed by the song title in quotes \n'movie-this' followed by the movie title in quotes \n'do-what-it-says'");
         break;
 };
+};
 
+liriCommandSwitch(chosenComnd);
 
-
-
-
-// {
-//     "tracks": {
-//       "href": "https://api.spotify.com/v1/search?query=March+of+Mephisto&type=track&market=US&offset=0&limit=1",
-//       "items": [
-//         {
-//           "album": {
-//             "album_type": "album",
-//             "artists": [
-//               {
-//                 "external_urls": {
-//                   "spotify": "https://open.spotify.com/artist/7gTbq5nTZGQIUgjEGXQpOS"
-//                 },
-//                 "href": "https://api.spotify.com/v1/artists/7gTbq5nTZGQIUgjEGXQpOS",
-//                 "id": "7gTbq5nTZGQIUgjEGXQpOS",
-//                 "name": "Kamelot",
-//                 "type": "artist",
-//                 "uri": "spotify:artist:7gTbq5nTZGQIUgjEGXQpOS"
-//               }
-//             ],
-//             "available_markets": [
-//               "AD",
-//               "AR",
-//               "AT",
-//               "AU",
-//               "BE",
-//               "BG",
-//               "BO",
-//               "BR",
-//               "CA",
-//               "CH",
-//               "CL",
-//               "CO",
-//               "CR",
-//               "CY",
-//               "CZ",
-//               "DE",
-//               "DK",
-//               "DO",
-//               "EC",
-//               "EE",
-//               "ES",
-//               "FI",
-//               "FR",
-//               "GB",
-//               "GR",
-//               "GT",
-//               "HK",
-//               "HN",
-//               "HU",
-//               "ID",
-//               "IE",
-//               "IL",
-//               "IS",
-//               "IT",
-//               "JP",
-//               "LI",
-//               "LT",
-//               "LU",
-//               "LV",
-//               "MC",
-//               "MT",
-//               "MX",
-//               "MY",
-//               "NI",
-//               "NL",
-//               "NO",
-//               "NZ",
-//               "PA",
-//               "PE",
-//               "PH",
-//               "PL",
-//               "PT",
-//               "PY",
-//               "RO",
-//               "SE",
-//               "SG",
-//               "SK",
-//               "SV",
-//               "TH",
-//               "TR",
-//               "TW",
-//               "US",
-//               "UY",
-//               "VN",
-//               "ZA"
-//             ],
-//             "external_urls": {
-//               "spotify": "https://open.spotify.com/album/6wQmnnsxRylnJYDKwwxy8r"
-//             },
-//             "href": "https://api.spotify.com/v1/albums/6wQmnnsxRylnJYDKwwxy8r",
-//             "id": "6wQmnnsxRylnJYDKwwxy8r",
-//             "images": [
-//               {
-//                 "height": 640,
-//                 "url": "https://i.scdn.co/image/1d53db9f3c26005572f0421e76c568679e75ceec",
-//                 "width": 640
-//               },
-//               {
-//                 "height": 300,
-//                 "url": "https://i.scdn.co/image/cc8dd3fd047ef64b845635c9cdd92d90bcac11c6",
-//                 "width": 300
-//               },
-//               {
-//                 "height": 64,
-//                 "url": "https://i.scdn.co/image/7be66daa96ed4ac0f7630848513578acd3e6fa55",
-//                 "width": 64
-//               }
-//             ],
-//             "name": "The Black Halo",
-//             "release_date": "2005-03-15",
-//             "release_date_precision": "day",
-//             "type": "album",
-//             "uri": "spotify:album:6wQmnnsxRylnJYDKwwxy8r"
-//           },
-//           "artists": [
-//             {
-//               "external_urls": {
-//                 "spotify": "https://open.spotify.com/artist/7gTbq5nTZGQIUgjEGXQpOS"
-//               },
-//               "href": "https://api.spotify.com/v1/artists/7gTbq5nTZGQIUgjEGXQpOS",
-//               "id": "7gTbq5nTZGQIUgjEGXQpOS",
-//               "name": "Kamelot",
-//               "type": "artist",
-//               "uri": "spotify:artist:7gTbq5nTZGQIUgjEGXQpOS"
-//             },
-//             {
-//               "external_urls": {
-//                 "spotify": "https://open.spotify.com/artist/2g2uqZcnWotiAy7hpj5Ui6"
-//               },
-//               "href": "https://api.spotify.com/v1/artists/2g2uqZcnWotiAy7hpj5Ui6",
-//               "id": "2g2uqZcnWotiAy7hpj5Ui6",
-//               "name": "Shagrath",
-//               "type": "artist",
-//               "uri": "spotify:artist:2g2uqZcnWotiAy7hpj5Ui6"
-//             }
-//           ],
-//           "available_markets": [
-//             "AD",
-//             "AR",
-//             "AT",
-//             "AU",
-//             "BE",
-//             "BG",
-//             "BO",
-//             "BR",
-//             "CA",
-//             "CH",
-//             "CL",
-//             "CO",
-//             "CR",
-//             "CY",
-//             "CZ",
-//             "DE",
-//             "DK",
-//             "DO",
-//             "EC",
-//             "EE",
-//             "ES",
-//             "FI",
-//             "FR",
-//             "GB",
-//             "GR",
-//             "GT",
-//             "HK",
-//             "HN",
-//             "HU",
-//             "ID",
-//             "IE",
-//             "IL",
-//             "IS",
-//             "IT",
-//             "JP",
-//             "LI",
-//             "LT",
-//             "LU",
-//             "LV",
-//             "MC",
-//             "MT",
-//             "MX",
-//             "MY",
-//             "NI",
-//             "NL",
-//             "NO",
-//             "NZ",
-//             "PA",
-//             "PE",
-//             "PH",
-//             "PL",
-//             "PT",
-//             "PY",
-//             "RO",
-//             "SE",
-//             "SG",
-//             "SK",
-//             "SV",
-//             "TH",
-//             "TR",
-//             "TW",
-//             "US",
-//             "UY",
-//             "VN",
-//             "ZA"
-//           ],
-//           "disc_number": 1,
-//           "duration_ms": 328973,
-//           "explicit": false,
-//           "external_ids": {
-//             "isrc": "QM3MF1600001"
-//           },
-//           "external_urls": {
-//             "spotify": "https://open.spotify.com/track/7m7LZGSKYcpB7nvG6FbVbM"
-//           },
-//           "href": "https://api.spotify.com/v1/tracks/7m7LZGSKYcpB7nvG6FbVbM",
-//           "id": "7m7LZGSKYcpB7nvG6FbVbM",
-//           "name": "March of Mephisto (feat. Shagrath)",
-//           "popularity": 50,
-//           "preview_url": "https://p.scdn.co/mp3-preview/8f2a50ae093d365b35aefe0805ff08f3b561b14f?cid=774b29d4f13844c495f206cafdad9c86",
-//           "track_number": 1,
-//           "type": "track",
-//           "uri": "spotify:track:7m7LZGSKYcpB7nvG6FbVbM"
-//         }
-//       ],
-//       "limit": 1,
-//       "next": "https://api.spotify.com/v1/search?query=March+of+Mephisto&type=track&market=US&offset=1&limit=1",
-//       "offset": 0,
-//       "previous": null,
-//       "total": 8
-//     }
-//   }
+function resetSwitch(newCommand) {
+    liriCommandSwitch(newCommand);
+};
