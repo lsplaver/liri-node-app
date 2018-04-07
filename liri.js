@@ -8,10 +8,13 @@ var request = require('request');
 
 var spotify = new Spotify(keys.spotify);
 var client = new Twitter(keys.twitter);
+var omdb = keys.omdb;
 
 var nodeArgs = process.argv;
 
 console.log(nodeArgs);
+
+var tempTitle = "";
 
 function songAtSpotify(title) {
     spotify.search({
@@ -36,12 +39,26 @@ function songAtSpotify(title) {
     )
 };
 
-if (nodeArgs.length > 4) {
-    var tempTitle = nodeArgs[3];
-    for (var z = 4; z < nodeArgs.length; z++) {
-        tempTitle =+ " " + nodeArgs[z];
-    }
-}
+function moviesAtOMDB(title) {
+    var omdbKey = omdb.key;
+    var queryUrl = "http://www.omdbapi.com/?t=" + title + "&y=&plot=full&apikey=" + omdbKey;
+    console.log(queryUrl);
+    request(queryUrl, function(err, response, body) {
+        if (!err && response.statusCode === 200) {
+            console.log(JSON.parse(body));
+            console.log("--------------------");
+            console.log("The title of the movie is: " + JSON.parse(body).Title);
+            console.log("The movie was made in: " + JSON.parse(body).Year);
+            console.log("The IMDB rating is: " + JSON.parse(body).Ratings[0].Value);
+            console.log("The Rotten Tomatoes rating is: " + JSON.parse(body).Ratings[1].Value);
+            console.log("The movies was produced in: " + JSON.parse(body).Country);
+            console.log("The language of the movie is: " + JSON.parse(body).Language);
+            console.log("The plot of the movie: \n" + JSON.parse(body).Plot);
+            console.log("The actors in the movie are: " + JSON.parse(body).Actors);
+        }
+    });
+};
+
 switch (nodeArgs[2]) {
     case "my-tweets":
         break;
@@ -50,7 +67,7 @@ switch (nodeArgs[2]) {
             songAtSpotify(nodeArgs[3]);
         }
         else if (nodeArgs.length > 4) {
-            var tempTitle = nodeArgs[3];
+            tempTitle = nodeArgs[3];
             for (var z = 4; z < nodeArgs.length; z++) {
                 tempTitle = tempTitle + " " + nodeArgs[z];
             }
@@ -61,6 +78,19 @@ switch (nodeArgs[2]) {
         }
         break;
     case "movie-this":
+        if (nodeArgs.length === 4) {
+            moviesAtOMDB(nodeArgs[3]);
+        }
+        else if (nodeArgs.length > 4) {
+            tempTitle = nodeArgs[3];
+            for (var z = 4; z < nodeArgs.length; z++) {
+                tempTitle = tempTitle + "+" + nodeArgs[z];
+            }
+            moviesAtOMDB(tempTitle);
+        }
+        else {
+            moviesAtOMDB("Mr.+Nobody");
+        }
         break;
     case "do-what-it-says":
         break;
