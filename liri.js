@@ -10,53 +10,89 @@ var fs = require('fs');
 var spotify = new Spotify(keys.spotify);
 var client = new Twitter(keys.twitter);
 
+function logInfo(loggedData) {
+
+    fs.appendFile('./log.txt', "\n" + loggedData, function (err) {
+        if (err) {
+            console.log("The append attempt failed with this error: " + err);
+        }
+        // else {
+        //     loggedData.split(',');
+        // }
+    }
+    )
+};
+
 var nodeArgs = process.argv;
 
 console.log(nodeArgs);
+for (var x = 0; x < 3; x++) {
+    logInfo(nodeArgs[x]);
+}
+
+// var tempNode = nodeArgs[3];
+// for (var x = 3; x < nodeArgs.length; x++) {
+//     tempNode = tempNode 
+// }
 
 var tempTitle = "";
 
 function songAtSpotify(title) {
+    logInfo(title);
     spotify.search({
         type: 'track',
         query: title,
         limit: 10
     },
-    function(err, data) {
-        if (err) {
-            return console.log("There was an error: " + err);
-        }
-
-        console.log(data);
-        for (var y = 0; y < data.tracks.items.length; y++) {
-            for (var x = 0; x < data.tracks.items[y].artists.length; x++) {
-                console.log("Artist: " + data.tracks.items[y].artists[x].name);
+        function (err, data) {
+            if (err) {
+                return console.log("There was an error: " + err);
             }
-            console.log("Title: " + data.tracks.items[y].name);
-            console.log("Preview Link: " + data.tracks.items[y].preview_url);
-            console.log("Album: " + data.tracks.items[y].album.name);}
+
+            // console.log(data);
+            for (var y = 0; y < data.tracks.items.length; y++) {
+                for (var x = 0; x < data.tracks.items[y].artists.length; x++) {
+                    console.log("Artist: " + data.tracks.items[y].artists[x].name);
+                    logInfo("Artist: " + data.tracks.items[y].artists[x].name);
+                }
+                console.log("Title: " + data.tracks.items[y].name);
+                logInfo("Title: " + data.tracks.items[y].name);
+                console.log("Preview Link: " + data.tracks.items[y].preview_url);
+                logInfo("Preview Link: " + data.tracks.items[y].preview_url);
+                console.log("Album: " + data.tracks.items[y].album.name);
+                logInfo("Album: " + data.tracks.items[y].album.name);
+            }
         }
     )
+    logInfo("---------------------------------------------------");
 };
 
 function moviesAtOMDB(title) {
-    var omdbKey = omdb.key;
+    logInfo(title);
     var queryUrl = "http://www.omdbapi.com/?t=" + title + "&y=&plot=full&apikey=trilogy";
     console.log(queryUrl);
-    request(queryUrl, function(err, response, body) {
+    logInfo(queryUrl);
+    request(queryUrl, function (err, response, body) {
         if (!err && response.statusCode === 200) {
-            console.log(JSON.parse(body));
-            console.log("--------------------");
             console.log("The title of the movie is: " + JSON.parse(body).Title);
+            logInfo("The title of the movie is: " + JSON.parse(body).Title);
             console.log("The movie was made in: " + JSON.parse(body).Year);
+            logInfo("The movie was made in: " + JSON.parse(body).Year);
             console.log("The IMDB rating is: " + JSON.parse(body).Ratings[0].Value);
+            logInfo("The IMDB rating is: " + JSON.parse(body).Ratings[0].Value);
             console.log("The Rotten Tomatoes rating is: " + JSON.parse(body).Ratings[1].Value);
+            logInfo("The Rotten Tomatoes rating is: " + JSON.parse(body).Ratings[1].Value);
             console.log("The movies was produced in: " + JSON.parse(body).Country);
+            logInfo("The movies was produced in: " + JSON.parse(body).Country);
             console.log("The language of the movie is: " + JSON.parse(body).Language);
+            logInfo("The language of the movie is: " + JSON.parse(body).Language);
             console.log("The plot of the movie: \n" + JSON.parse(body).Plot);
+            logInfo("The plot of the movie: \n" + JSON.parse(body).Plot);
             console.log("The actors in the movie are: " + JSON.parse(body).Actors);
+            logInfo("The actors in the movie are: " + JSON.parse(body).Actors);
         }
     });
+    logInfo("---------------------------------------------------");
 };
 
 var chosenComnd = nodeArgs[2];
@@ -89,7 +125,7 @@ function liriCommandSwitch(chosenCommand) {
                 }
                 songAtSpotify(tempTitle);
             }
-           else {
+            else {
                 songAtSpotify("The Sign");
             }
             break;
@@ -109,15 +145,18 @@ function liriCommandSwitch(chosenCommand) {
             }
             break;
         case "do-what-it-says":
-            fs.readFile('random.txt', 'utf8', function(err, data) {
+            fs.readFile('random.txt', 'utf8', function (err, data) {
                 if (err) {
+                    logInfo("Error occurred: " + err);
                     return console.log("Error occurred: " + err);
                 }
                 console.log(data);
+                logInfo(data);
                 var tempRandom = [];
                 tempRandom = data.split(',');
                 for (var a = 0; a < tempRandom.length; a++) {
                     console.log("The value of tempRandom[" + a + "] is: " + tempRandom[a]);
+                    logInfo("The value of tempRandom[" + a + "] is: " + tempRandom[a]);
                 }
                 randomCommand = tempRandom[0];
                 nodeArgs[3] = tempRandom[1];
@@ -125,22 +164,31 @@ function liriCommandSwitch(chosenCommand) {
             });
             break;
         default:
-            console.log("You didn't enter a valid option, rerun with the following options: \n'my-tweets' \n'spotify-this-song' followed by the song title in quotes \n'movie-this' followed by the movie title in quotes \n'do-what-it-says'");
+            var tempString = "You didn't enter a valid option, rerun with the following options: \n'my-tweets' \n'spotify-this-song' followed by the song title in quotes \n'movie-this' followed by the movie title in quotes \n'do-what-it-says'";
+            console.log(tempString);
+            logInfo(tempString);
+            logInfo("---------------------------------------------------");
             break;
         };
-    };
+};
 
 liriCommandSwitch(chosenComnd);
 
 function resetSwitch(newCommand) {
+    logInfo("The new command: " + newCommand);
     liriCommandSwitch(newCommand);
 };
 
 function tweetsAtTwitter(theTweets) {
     tempTweets = theTweets + " filter:safe";
+    logInfo(tempTweets);
     client.get('search/tweets', {
-        q: tempTweets
-    }, function(error, tweets, response) {
+        q: tempTweets,
+        lang: 'en',
+        since_id: 20
+    }, function (error, tweets, response) {
         console.log(tweets);
+        logInfo(JSON.stringify(tweets).toString());
+        logInfo("---------------------------------------------------");
     });
 };
