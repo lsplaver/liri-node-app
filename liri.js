@@ -9,7 +9,6 @@ var fs = require('fs');
 
 var spotify = new Spotify(keys.spotify);
 var client = new Twitter(keys.twitter);
-var omdb = keys.omdb;
 
 var nodeArgs = process.argv;
 
@@ -42,7 +41,7 @@ function songAtSpotify(title) {
 
 function moviesAtOMDB(title) {
     var omdbKey = omdb.key;
-    var queryUrl = "http://www.omdbapi.com/?t=" + title + "&y=&plot=full&apikey=" + omdbKey;
+    var queryUrl = "http://www.omdbapi.com/?t=" + title + "&y=&plot=full&apikey=trilogy";
     console.log(queryUrl);
     request(queryUrl, function(err, response, body) {
         if (!err && response.statusCode === 200) {
