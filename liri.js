@@ -63,66 +63,85 @@ function moviesAtOMDB(title) {
 var chosenComnd = nodeArgs[2];
 
 function liriCommandSwitch(chosenCommand) {
-
-switch (chosenCommand) {
-    case "my-tweets":
-        break;
-    case "spotify-this-song":
-        if (nodeArgs.length === 4) {
-            songAtSpotify(nodeArgs[3]);
-        }
-        else if (nodeArgs.length > 4) {
-            tempTitle = nodeArgs[3];
-            for (var z = 4; z < nodeArgs.length; z++) {
-                tempTitle = tempTitle + " " + nodeArgs[z];
+    switch (chosenCommand) {
+        case "my-tweets":
+            if (nodeArgs.length === 4) {
+                tweetsAtTwitter(nodeArgs[3]);
             }
-            songAtSpotify(tempTitle);
-        }
-       else {
-            songAtSpotify("The Sign");
-        }
-        break;
-    case "movie-this":
-        if (nodeArgs.length === 4) {
-            moviesAtOMDB(nodeArgs[3]);
-        }
-        else if (nodeArgs.length > 4) {
-            tempTitle = nodeArgs[3];
-            for (var z = 4; z < nodeArgs.length; z++) {
-                tempTitle = tempTitle + "+" + nodeArgs[z];
+            else if (nodeArgs.length > 4) {
+                tempTitle = nodeArgs[3];
+                for (var b = 4; b < nodeArgs.length; b++) {
+                    tempTitle = tempTitle + " " + nodeArgs[b];
+                }
+                tweetsAtTwitter(tempTitle);
             }
-            moviesAtOMDB(tempTitle);
-        }
-        else {
-            moviesAtOMDB("Mr.+Nobody");
-        }
-        break;
-    case "do-what-it-says":
-        fs.readFile('random.txt', 'utf8', function(err, data) {
-            if (err) {
-                return console.log("Error occurred: " + err);
+            else {
+                tweetsAtTwitter("node.js");
             }
-
-            console.log(data);
-
-            var tempRandom = [];
-            tempRandom = data.split(',');
-            for (var a = 0; a < tempRandom.length; a++) {
-                console.log("The value of tempRandom[" + a + "] is: " + tempRandom[a]);
+            break;
+        case "spotify-this-song":
+            if (nodeArgs.length === 4) {
+                songAtSpotify(nodeArgs[3]);
             }
-            randomCommand = tempRandom[0];
-            nodeArgs[3] = tempRandom[1];
-            resetSwitch(randomCommand);
-        });
-        break;
-    default:
-        console.log("You didn't enter a valid option, rerun with the following options: \n'my-tweets' \n'spotify-this-song' followed by the song title in quotes \n'movie-this' followed by the movie title in quotes \n'do-what-it-says'");
-        break;
-};
-};
+            else if (nodeArgs.length > 4) {
+                tempTitle = nodeArgs[3];
+                for (var z = 4; z < nodeArgs.length; z++) {
+                    tempTitle = tempTitle + " " + nodeArgs[z];
+                }
+                songAtSpotify(tempTitle);
+            }
+           else {
+                songAtSpotify("The Sign");
+            }
+            break;
+        case "movie-this":
+            if (nodeArgs.length === 4) {
+                moviesAtOMDB(nodeArgs[3]);
+            }
+            else if (nodeArgs.length > 4) {
+                tempTitle = nodeArgs[3];
+                for (var z = 4; z < nodeArgs.length; z++) {
+                    tempTitle = tempTitle + "+" + nodeArgs[z];
+                }
+                moviesAtOMDB(tempTitle);
+            }
+            else {
+                moviesAtOMDB("Mr.+Nobody");
+            }
+            break;
+        case "do-what-it-says":
+            fs.readFile('random.txt', 'utf8', function(err, data) {
+                if (err) {
+                    return console.log("Error occurred: " + err);
+                }
+                console.log(data);
+                var tempRandom = [];
+                tempRandom = data.split(',');
+                for (var a = 0; a < tempRandom.length; a++) {
+                    console.log("The value of tempRandom[" + a + "] is: " + tempRandom[a]);
+                }
+                randomCommand = tempRandom[0];
+                nodeArgs[3] = tempRandom[1];
+                resetSwitch(randomCommand);
+            });
+            break;
+        default:
+            console.log("You didn't enter a valid option, rerun with the following options: \n'my-tweets' \n'spotify-this-song' followed by the song title in quotes \n'movie-this' followed by the movie title in quotes \n'do-what-it-says'");
+            break;
+        };
+    };
 
 liriCommandSwitch(chosenComnd);
 
 function resetSwitch(newCommand) {
     liriCommandSwitch(newCommand);
+};
+
+function tweetsAtTwitter(theTweets) {
+    tempTweets = theTweets + " filter:safe";
+    client.get('search/tweets', {
+        q: tempTweets
+    }, function(error, tweets, response) {
+        console.log(tweets);
+    });
 };
