@@ -16,9 +16,6 @@ function logInfo(loggedData) {
         if (err) {
             console.log("The append attempt failed with this error: " + err);
         }
-        // else {
-        //     loggedData.split(',');
-        // }
     }
     )
 };
@@ -29,11 +26,6 @@ console.log(nodeArgs);
 for (var x = 0; x < 3; x++) {
     logInfo(nodeArgs[x]);
 }
-
-// var tempNode = nodeArgs[3];
-// for (var x = 3; x < nodeArgs.length; x++) {
-//     tempNode = tempNode 
-// }
 
 var tempTitle = "";
 
